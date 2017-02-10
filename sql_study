@@ -1,0 +1,134 @@
+select cust_name,cust_contact
+from customers
+where cust_id in (select cust_id from orders where order_num
+in(select order_num from orderitems where prod_id ='rgan01'));
+
+select cust_name,cust_contact
+from customers as c
+where cust_id in (select cust_id from orders as o where order_num
+in(select order_num from orderitems  as oi where prod_id ='rgan01'));
+
+select cust_name,cust_contact
+from customers,orders,orderitems
+where customers.cust_id=orders.cust_id and orders.order_num=orderitems.order_num and orderitems.prod_id='rgan01';
+
+select cust_name,cust_contact
+from customers as c,orders as o,orderitems as oi
+where c.cust_id=o.cust_id and o.order_num=oi.order_num and oi.prod_id='rgan01';
+
+select RTRIM(vend_name)+'('+RTRIM(vend_country)+')'
+from vendors
+ORDER BY vend_name;
+
+select customers.cust_id,orders.order_num
+from customers left outer join orders
+on customers.cust_id=orders.cust_id;
+
+select cust_name,cust_contact,cust_email
+from customers
+where cust_state in ('tl','in','mi')
+union
+select cust_name,cust_contact,cust_email
+from customers
+where cust_name='fun4a11'
+order by cust_name,cust_contact;
+
+select *
+into Custcopy
+from customers;
+CREATE TABLE Custcopy
+(
+  cust_id      char(10)  NOT NULL ,
+  cust_name    char(50)  NOT NULL ,
+  cust_address char(50)  NULL ,
+  cust_city    char(50)  NULL ,
+  cust_state   char(5)   NULL ,
+  cust_zip     char(10)  NULL ,
+  cust_country char(50)  NULL ,
+  cust_contact char(50)  NULL ,
+  cust_email   char(255) NULL 
+);
+
+update customers
+set cust_contact='sam roberts',
+cust_email=null
+where cust_id='100000006';
+
+delete from customers
+where cust_id='100000006';
+
+alter table vendors
+add vend_phone char(20);
+
+create view vendorlocation as
+select rtrim(vend_name)||'('||rtrim(vend_country)||')' 
+as vend_title
+from vendors;
+
+DECLARE CustCursor CURSOR
+FOR 
+SELECT * from customers
+WHERE cust_email is null;
+
+ALTER TABLE vendors
+add constraint primary key (vend_id); 
+
+alter table orders
+add constraint foreign key (cust_id) references customers (cust_id);
+create index prod_name_ind
+on products(prod_name);
+
+select prod_id,prod_price,prod_name
+from products
+order by 2,3;
+
+select prod_id,prod_price,prod_name
+from products
+order by prod_id desc,prod_price;
+
+select prod_id,prod_price,prod_name
+from products
+where prod_price between 5 and 10;
+
+select cust_name
+from customers
+where cust_email is null;
+
+select order_item
+from orderitems 
+where quantity in(3,4,5,6,7,8);
+select prod_name
+from products
+where not vend_id='DLL01'
+order by prod_name;
+
+select prod_name
+from products
+where prod_name like '[F]%';
+select cust_contact
+from customers
+where cust_contact like '[JM]%';
+
+select vend_name,upper(vend_name) as vend_name_upset
+from vendors
+order by vend_name;
+
+select order_num
+from orders
+where year(order_date)=2012;
+
+select AVG( distinct prod_price) as avg_price
+from products;
+
+select COUNT(cust_email) as num_cust
+from customers;
+
+select vend_id,count(*)as num_prods
+from products
+group by vend_id;
+
+select vend_id,count(*)as num_prods
+from products
+where prod_price>=4
+group by vend_id
+having count(*)>=2;
